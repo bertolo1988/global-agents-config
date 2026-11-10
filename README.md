@@ -8,15 +8,11 @@ Global config files for claude and opencode.
 ./install.sh
 ```
 
-The script copies the files to their locations:
+Copies the config files into place:
 
 | File | Target |
 | --- | --- |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 | `opencode/AGENTS.md` | `~/.config/opencode/AGENTS.md` |
 
-`CLAUDE_CONFIG_DIR` overrides `~/.claude` and `XDG_CONFIG_HOME` overrides `~/.config`.
-
-Re-run the script after editing the files here to refresh the installed copies. A copy that already matches is left untouched. Symlinks left by older versions of the script are replaced with plain files.
-
-When a target differs, the script asks before replacing it, and a confirmed replacement is renamed to `<name>.bak.<timestamp>` first. Pass `--yes` to replace without asking. Without a terminal to answer on, differing files are left untouched and the script exits 1.
+Override target roots with `CLAUDE_CONFIG_DIR` (`~/.claude`) and `XDG_CONFIG_HOME` (`~/.config`). Re-run after editing to refresh installed copies (matching copies are untouched; older symlinks are replaced with plain files). Differing targets are backed up to `<name>.bak.<timestamp>` after confirmation (pass `--yes` to skip the prompt; non-interactive runs without `--yes` leave differing files untouched and exit `1`).
