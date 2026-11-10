@@ -13,8 +13,6 @@ fi
 claude_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 opencode_dir="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
 stamp="$(date +%Y%m%d-%H%M%S)"
-assume_yes=0
-skipped=0
 ref="${REF:-main}"
 raw_base="https://raw.githubusercontent.com/bertolo1988/global-config-claude-opencode/$ref"
 stage="$(mktemp -d)"
@@ -22,8 +20,8 @@ trap 'rm -rf "$stage"' EXIT
 
 usage() {
   cat <<'EOF'
-Usage: ./install.sh [--yes]
-       curl -fsSL <raw-url> | bash -s -- [--yes]
+Usage: ./install.sh
+       curl -fsSL <raw-url> | bash
 
 Copies the global instruction files into place:
   claude/CLAUDE.md   -> ~/.claude/CLAUDE.md
@@ -35,23 +33,10 @@ from (default: main).
 
 CLAUDE_CONFIG_DIR overrides ~/.claude and XDG_CONFIG_HOME overrides ~/.config.
 
-Re-run the script to refresh the installed copies.
-A target that already matches is left untouched. When a target differs, the
-script asks before replacing it; a confirmed replacement is renamed to
-<name>.bak.<timestamp> first. Pass --yes to replace without asking; without a
-terminal to answer on, differing files are left alone.
+Re-run the script to refresh the installed copies. A target that already
+matches is left untouched; a differing target is backed up to
+<name>.bak.<timestamp> and replaced.
 EOF
-}
-
-confirm() {
-  [ -t 0 ] || return 1
-  local reply
-  printf 'replace %s? [y/N] ' "$1"
-  read -r reply || { printf '\n'; return 1; }
-  case "$reply" in
-    [yY] | [yY][eE][sS]) return 0 ;;
-    *) return 1 ;;
-  esac
 }
 
 source_file() {
@@ -84,16 +69,7 @@ install_file() {
     return
   fi
 
-  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
-    # Left behind by an older version of this script; just drop the link.
-    rm -f "$dest"
-  elif [ -e "$dest" ] || [ -L "$dest" ]; then
-    if [ "$assume_yes" -eq 0 ] && ! confirm "$dest"; then
-      printf 'skip   %s (kept as is)\n' "$dest"
-      skipped=$((skipped + 1))
-      return
-    fi
-
+  if [ -e "$dest" ] || [ -L "$dest" ]; then
     backup="$dest.bak.$stamp"
     mv "$dest" "$backup"
     printf 'backup %s\n' "$backup"
@@ -105,7 +81,6 @@ install_file() {
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
-    -y | --yes) assume_yes=1 ;;
     -h | --help) usage; exit 0 ;;
     *) echo "unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
@@ -114,8 +89,3 @@ done
 
 install_file "$(source_file claude/CLAUDE.md)" "$claude_dir/CLAUDE.md"
 install_file "$(source_file opencode/AGENTS.md)" "$opencode_dir/AGENTS.md"
-
-if [ "$skipped" -gt 0 ]; then
-  echo "install.sh: $skipped file(s) not installed; run with --yes to replace them" >&2
-  exit 1
-fi
