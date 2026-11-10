@@ -34,7 +34,7 @@ These rules apply to every agent, in every project.
 - **Worktrees:** Unless told otherwise, never work in the main checkout. Use one worktree per branch at `~/code/tmp/<project>/<branch-name>`:
   `git fetch origin <default-branch> && git worktree add -b <branch-name> ../tmp/<project>/<branch-name> origin/<default-branch>`
   Run all commands inside the worktree. Before starting new work and once a PR merges, remove merged worktrees (`git worktree remove`), delete their local branches, and run `git worktree prune`.
-- **Pull requests:** Deliver all changes as a PR against the default branch, never a direct commit/push. Open as a draft (`gh pr create --draft`), mark ready (`gh pr ready`) when complete, and address feedback with new commits. Never merge, approve, or close your own PR unless I explicitly allow it for that PR. Put the change explanation in the PR description and reply only `Done. <link-to-pull-request>`.
+- **Pull requests:** Deliver all changes as a PR against the default branch (or the target branch a dispatching supervisor names), never a direct commit/push. Open as a draft (`gh pr create --draft`), mark ready (`gh pr ready`) when complete, and address feedback with new commits. Never merge, approve, or close a PR unless I explicitly allow it for that PR, or the project's `AGENTS.md` / `CLAUDE.md` or an invoked supervisor skill explicitly authorizes merging a subagent's reviewed PR. Put the change explanation in the PR description and reply only `Done. <link-to-pull-request>`.
 
 ## Cost control
 
