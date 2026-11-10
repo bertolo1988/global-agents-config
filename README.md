@@ -5,22 +5,14 @@ Global config files for claude and opencode.
 ## Install
 
 ```sh
-./install.sh
+curl -fsSL https://raw.githubusercontent.com/bertolo1988/global-config-claude-opencode/main/install.sh | bash
 ```
 
-The script symlinks the files into place, so this repo stays the single source of truth:
+Copies the config files into place:
 
 | File                 | Target                         |
 | -------------------- | ------------------------------ |
 | `claude/CLAUDE.md`   | `~/.claude/CLAUDE.md`          |
 | `opencode/AGENTS.md` | `~/.config/opencode/AGENTS.md` |
 
-`CLAUDE_CONFIG_DIR` overrides `~/.claude` and `XDG_CONFIG_HOME` overrides `~/.config`. Running the script again is a no-op.
-
-When a target already exists, the script asks before replacing it, and a confirmed replacement is renamed to `<name>.bak.<timestamp>` first. Pass `--yes` to replace without asking. Without a terminal to answer on, existing files are left untouched and the script exits 1.
-
-## Caveats
-
-- Defaults to Typescript and Node.js
-
-- Stores worktrees at ~/code/tmp
+The files are downloaded from GitHub; `REF` selects the branch or tag (default `main`). Override target roots with `CLAUDE_CONFIG_DIR` (`~/.claude`) and `XDG_CONFIG_HOME` (`~/.config`). Re-run the curl command to refresh installed copies: matching copies are untouched, and differing targets are backed up to `<name>.bak.<timestamp>` and replaced. The script prints one line per file (`created`, `updated`, or `already up to date`) and a closing summary.
