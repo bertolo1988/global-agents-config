@@ -1,6 +1,6 @@
 # global-config-claude-opencode
 
-Global config files for claude and opencode.
+Global config files for claude and opencode. Defaults to Typescript. Stores git worktrees at `~/code/tmp/<project>/<branch-name>`.
 
 ## Install
 
