@@ -29,9 +29,10 @@ EOF
 }
 
 confirm() {
+  [ -t 0 ] || return 1
   local reply
   printf 'replace %s? [y/N] ' "$1"
-  read -r reply || return 1
+  read -r reply || { printf '\n'; return 1; }
   case "$reply" in
     [yY] | [yY][eE][sS]) return 0 ;;
     *) return 1 ;;
@@ -53,7 +54,7 @@ install_file() {
     rm -f "$dest"
   elif [ -e "$dest" ] || [ -L "$dest" ]; then
     if [ "$assume_yes" -eq 0 ] && ! confirm "$dest"; then
-      printf '\nskip   %s (kept as is)\n' "$dest"
+      printf 'skip   %s (kept as is)\n' "$dest"
       skipped=$((skipped + 1))
       return
     fi
