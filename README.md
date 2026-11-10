@@ -8,15 +8,11 @@ Global config files for claude and opencode.
 curl -fsSL https://raw.githubusercontent.com/bertolo1988/global-config-claude-opencode/main/install.sh | bash
 ```
 
-The script copies the files to their locations:
+Copies the config files into place:
 
 | File | Target |
 | --- | --- |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 | `opencode/AGENTS.md` | `~/.config/opencode/AGENTS.md` |
 
-The files are downloaded from GitHub. `REF` selects the branch or tag to download from (default `main`); `CLAUDE_CONFIG_DIR` overrides `~/.claude` and `XDG_CONFIG_HOME` overrides `~/.config`.
-
-Re-run the curl command to refresh the installed copies. A copy that already matches is left untouched.
-
-When a target differs, the script asks before replacing it, and a confirmed replacement is renamed to `<name>.bak.<timestamp>` first. Pass `--yes` to replace without asking. Without a terminal to answer on, differing files are left untouched and the script exits 1.
+The files are downloaded from GitHub; `REF` selects the branch or tag (default `main`). Override target roots with `CLAUDE_CONFIG_DIR` (`~/.claude`) and `XDG_CONFIG_HOME` (`~/.config`). Re-run the curl command to refresh installed copies (matching copies are untouched). Differing targets are backed up to `<name>.bak.<timestamp>` after confirmation (pass `--yes` to skip the prompt; non-interactive runs without `--yes` leave differing files untouched and exit `1`).
