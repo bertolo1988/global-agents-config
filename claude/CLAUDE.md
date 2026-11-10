@@ -2,24 +2,23 @@
 
 These rules apply to every agent, in every project.
 
-- Never commit or send someone .env file
-- Never commit or send someone secrets or environment variables values
+- **Secrets:** Never commit or send anyone a `.env` file, secrets, or environment variable values. Never read `.env` files into context (read `.env.example` instead) unless I explicitly ask.
 - **Paid services:** Never sign up for, subscribe to, or incur charges on any paid service online without my explicit authorization first.
 - **Production data:** Never delete production data without my explicit authorization first.
 - **Tech stack:** Prefer TypeScript, Node.js, and AWS unless a task clearly calls for something else.
 - **Node version:** In Node.js projects, never pick a Node version ad hoc. Use the current LTS release and commit an `.nvmrc` pinning it. If a `.nvmrc` exists, follow it. Keep `engines.node`, CI and Docker images in line with that LTS pin.
 - **Testing (new TypeScript projects):** When setting up a new TypeScript project, use Jest for unit tests with `reporters: ['jest-silent-reporter']` and `bail: true` in the Jest config. Use Playwright for e2e tests with `maxFailures: 1` in `playwright.config.ts`, and run them with `--reporter=dot`.
-- **Delegation:** Delegate trivial, well-scoped coding tasks to subagents running a cheaper model. Use Sonnet 5.5 at `high` effort (`model: sonnet`, `effort: high`) as the default; use Haiku 5.5 at `max` effort (`model: haiku`, `effort: max`) for purely mechanical work (renames, boilerplate, simple searches). Keep complex design, debugging and review work in the main session.
+- **Delegation:** Delegate trivial, well-scoped coding tasks to subagents running a cheaper model. Use Sonnet (`model: "sonnet"`) as the default; use Haiku (`model: "haiku"`) for purely mechanical work (renames, boilerplate, simple searches). Keep complex design, debugging and review work in the main session.
 - **Accountability:** You remain responsible for what delegated agents deliver. Review their output, and if a subagent fails or cannot complete the task correctly, take it over yourself.
 - **Token economy:**
-  - Cut long command output down (`| tail -50`, `| grep -i error`, `--quiet` flags). Never dump full logs or test output.
+  - Cut long command output down: prefer tool quiet/concise flags (`--quiet`, `--silent`, `--reporter=dot`), and when piping into `| tail -50` or `| grep -i error`, use `set -o pipefail` (or check the command's exit status) so failures aren't masked. Never dump full logs or test output.
   - Keep replies short: no restating the plan back to me, no summary of what you just did unless something changed, no repeating code I can already see in the diff.
   - Don't spawn subagents for small lookups you can do with one or two tool calls; a subagent has to rebuild context from zero.
 
 ## Claiming issues and tickets
 
-- **Claim first.** The moment you touch a GitHub issue or Jira ticket (you are asked to work on it, or you start planning, exploring or changing code for it), move it to in progress before doing anything else, so nobody else takes it. GitHub issues have no status beyond open and closed, so on GitHub "in progress" means the `in-progress` label and nothing else:
-  - GitHub: make sure the label exists, then add it. `gh label create "in-progress" --color FBCA04 --description "Being worked on"` reports a duplicate-name error when it already exists; that is fine. Then `gh issue edit <n> --add-label "in-progress"`. The label alone is the claim: no assignee or project-board move.
+- **Claim first.** When you are asked to work on, plan, or implement a GitHub issue or Jira ticket (not for read-only questions about it), move it to in progress before doing anything else, so nobody else takes it. GitHub issues have no status beyond open and closed, so on GitHub "in progress" means the `in-progress` label and nothing else:
+  - GitHub: run `gh issue edit <n> --add-label "in-progress"`. If that fails because the label does not exist yet, create it (`gh label create "in-progress" --color FBCA04 --description "Being worked on"`) and re-run `gh issue edit <n> --add-label "in-progress"`. The label alone is the claim: no assignee or project-board move.
   - Jira: move the ticket to its in-progress status and assign it to yourself, using whatever Jira access the session has (Atlassian MCP tools, a Jira CLI, or asking me).
   - If the project documents its own claim procedure, follow that instead.
 - **Respect existing claims.** If the issue or ticket already carries a claim label — `in-progress`, or an older `status: in-progress` / `in progress` variant still present in some repos — or is assigned to someone else, stop and tell me; never take it over. Don't work on tickets marked as "in-progress" by someone else.
@@ -31,10 +30,10 @@ These rules apply to every agent, in every project.
 
 ## Working on git repositories
 
-- **Commits:** Never add co-author trailers or any other co-author attribution to commits. Always commit as the configured git user, and only as that user.
+- **Commits:** Never add co-author trailers or any other co-author attribution to commits. Always commit as the configured git user, and only as that user. Never rewrite published history (`git push --force`, `git reset --hard`, or amending pushed commits) unless I explicitly ask.
 - **Commit messages:** Follow the project's own norm when it has one (project instructions, CONTRIBUTING, commitlint config, or its established commit history); otherwise always use [Conventional Commits](https://www.conventionalcommits.org/): `<type>(<optional scope>): <description>`, where type is one of `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`. Use the imperative mood in the description, no trailing period, subject line at most 72 characters. Add a body when the reason for the change is not obvious, and a `BREAKING CHANGE:` footer (or `!` after the type/scope) for breaking changes. Reference issues in a footer (`Refs: #123`). Never write vague subjects like "updates", "fixes", or "wip".
-- **Worktrees:** Unless a project or I say otherwise, every agent works in its own git worktree, never in the project's main checkout, which is mine. Put it in a `tmp` folder next to the project, one worktree per branch: for `~/code/<project>` use `~/code/tmp/<project>/<branch-name>` (from the project folder: `git worktree add -b <branch-name> ../tmp/<project>/<branch-name> origin/<default-branch>`). Run every command from inside the worktree; don't edit files, switch branches, stash, or build in the main checkout. Once the branch's PR is merged, remove the worktree (`git worktree remove`), delete the local branch, and run `git worktree prune`; before starting new work, also clean up any of your worktrees whose PR has already merged.
-- **Pull requests:** Deliver every change as a pull request against the default branch, never as a direct commit or push to it. I review and merge PRs: never merge, approve, or close your own PR unless I explicitly say that you may merge that one. Address review feedback with new commits on the same branch. Put the explanation of what changed and why in the PR description, not in your reply: when the work is done, reply only `Done. <link-to-pull-request>`.
+- **Worktrees:** Unless a project or I say otherwise, every agent works in its own git worktree, never in the project's main checkout, which is mine. Put it in a `tmp` folder next to the project, one worktree per branch: for `~/code/<project>` use `~/code/tmp/<project>/<branch-name>` (from the project folder: `git fetch origin <default-branch> && git worktree add -b <branch-name> ../tmp/<project>/<branch-name> origin/<default-branch>`). Run every command from inside the worktree; don't edit files, switch branches, stash, or build in the main checkout. Once the branch's PR is merged, remove the worktree (`git worktree remove`), delete the local branch, and run `git worktree prune`; before starting new work, also clean up any of your worktrees whose PR has already merged.
+- **Pull requests:** Deliver every change as a pull request against the default branch, never as a direct commit or push to it. I review and merge PRs: never merge, approve, or close your own PR unless I explicitly say that you may merge that one. Address review feedback with new commits on the same branch. When delivering a pull request, put the explanation of what changed and why in the PR description, not in your reply, and reply only `Done. <link-to-pull-request>`.
 
 ## Cost control
 
