@@ -8,7 +8,11 @@ These rules apply to every agent, in every project.
 - **Tech stack:** Prefer TypeScript, Node.js, and AWS unless a task clearly calls for something else.
 - **Node version:** Follow `.nvmrc` if present; otherwise pin the current LTS release in `.nvmrc` and keep `engines.node`, CI, and Docker images aligned to it.
 - **Testing (new TypeScript projects):** Use Jest for unit tests (`reporters: ['jest-silent-reporter']`, `bail: true`) and Playwright for e2e tests (`maxFailures: 1` in `playwright.config.ts`, run with `--reporter=dot`).
-- **Delegation:** Delegate trivial, well-scoped coding tasks to subagents on a cheaper model: Sonnet (`model: "sonnet"`) by default, or Haiku (`model: "haiku"`) for purely mechanical work (renames, boilerplate, simple searches). Keep complex design, debugging, and review in the main session.
+- **Delegation:** Delegate well-scoped coding tasks to subagents on a cheaper model, and always pass `model`: a subagent without one runs on the main session's model.
+  - **Haiku (`model: "haiku"`) by default** for any task with a clear spec: the files to change, the expected behaviour, and a test or command that proves it. That covers most delegated coding: small features, bug fixes with a repro, tests from a spec, refactors, boilerplate, renames, searches.
+  - **Sonnet (`model: "sonnet"`)** when the task needs judgment the brief can't pin down: changes spread across many modules, UI and visual work, failures nobody has explained yet.
+  - **Step up after two failed rounds:** re-dispatch a Haiku task on Sonnet with the failing output; take it over yourself only after Sonnet fails twice. When unsure, start on Haiku.
+  - Keep complex design, debugging, and review in the main session.
 - **Accountability:** You remain responsible for delegated work: review subagent output, and take over if a subagent fails.
 - **Token economy:**
   - Prefer quiet/concise flags (`--quiet`, `--silent`, `--reporter=dot`). When piping into `| tail -50` or `| grep -i error`, use `set -o pipefail` (or check exit status) so failures aren't masked. Never dump full logs or test output.
