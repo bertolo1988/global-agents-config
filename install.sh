@@ -16,6 +16,7 @@ fi
 
 claude_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 opencode_dir="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+codex_dir="${CODEX_HOME:-$HOME/.codex}"
 stamp="$(date +%Y%m%d-%H%M%S)"
 stage="$(mktemp -d)"
 trap 'rm -rf "$stage"' EXIT
@@ -33,12 +34,14 @@ Usage: ./install.sh
 Copies the global instruction files into place:
   claude/CLAUDE.md   -> ~/.claude/CLAUDE.md
   opencode/AGENTS.md -> ~/.config/opencode/AGENTS.md
+  codex/AGENTS.md    -> ~/.codex/AGENTS.md
 
 From a checkout the local files are copied; when piped from curl they are
 downloaded from GitHub first. REF overrides the branch or tag to download
 from (default: main).
 
-CLAUDE_CONFIG_DIR overrides ~/.claude and XDG_CONFIG_HOME overrides ~/.config.
+CLAUDE_CONFIG_DIR overrides ~/.claude, XDG_CONFIG_HOME overrides ~/.config and
+CODEX_HOME overrides ~/.codex.
 
 Re-run the script to refresh the installed copies. A target that already
 matches is left untouched; a differing target is backed up to
@@ -67,7 +70,7 @@ source_file() {
     exit 1
   }
 
-  file="$stage/$(basename "$rel")"
+  file="$stage/${rel//\//-}"
   if ! curl -fsSL "$raw_base/$rel" -o "$file"; then
     echo "install.sh: failed to download $raw_base/$rel" >&2
     exit 1
@@ -136,6 +139,7 @@ fi
 
 install_file "$(source_file claude/CLAUDE.md)" "$claude_dir/CLAUDE.md"
 install_file "$(source_file opencode/AGENTS.md)" "$opencode_dir/AGENTS.md"
+install_file "$(source_file codex/AGENTS.md)" "$codex_dir/AGENTS.md"
 
 printf '\n'
 if [ "$created" -eq 0 ] && [ "$updated" -eq 0 ]; then
@@ -152,4 +156,4 @@ printf '.\n'
 if [ "$backups" -gt 0 ]; then
   printf 'Backups use the suffix .bak.%s.\n' "$stamp"
 fi
-printf 'Start a new Claude Code or OpenCode session to pick up the new instructions.\n'
+printf 'Start a new Claude Code, OpenCode or Codex session to pick up the new instructions.\n'
