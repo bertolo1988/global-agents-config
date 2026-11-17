@@ -35,6 +35,7 @@ These rules apply to every agent, in every project.
 
 - **Commits:** Commit only as the configured git user; never add co-author trailers. Never rewrite published history (`git push --force`, `git reset --hard`, amending pushed commits) unless I explicitly ask.
 - **Commit messages:** Follow the project's convention if one exists; otherwise use [Conventional Commits](https://www.conventionalcommits.org/) (`<type>(<optional scope>): <description>`, imperative mood, <=72 chars, no trailing period, body when non-obvious, `BREAKING CHANGE:` or `!` for breaking changes, `Refs: #123` footer). Never use vague subjects (`updates`, `fixes`, `wip`).
+- **GitHub actions:** Make every GitHub write (comments, replies, reviews, labels, issue and PR creation or edits, merges) through the `gh` CLI or the GitHub MCP server, never through a browser.
 - **Worktrees:** Unless told otherwise, never work in the main checkout. Use one worktree per branch at `~/code/tmp/<project>/<branch-name>`:
   `git fetch origin <default-branch> && git worktree add -b <branch-name> ../tmp/<project>/<branch-name> origin/<default-branch>`
   Run all commands inside the worktree. Before starting new work and once a PR merges, remove merged worktrees (`git worktree remove`), delete their local branches, and run `git worktree prune`.
