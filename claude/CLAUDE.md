@@ -31,6 +31,10 @@ These rules apply to every agent, in every project.
   - Handed off: leaving the ticket for someone else (Jira: move back to start status).
 - **Dispatched agents:** If a supervisor or another session already claimed the item, skip claiming and releasing.
 
+## Creating issues and tickets
+
+- **Milestones:** Milestones are optional, but name them `<version> - <description>` (e.g. `0.1.0 - Design phase`, `0.2.2 - Performance review improvements`). When I ask you to create a ticket without naming a milestone, suggest a fitting existing milestone (`gh api repos/{owner}/{repo}/milestones`) or propose a new name in this format; creating it without one is fine if I decline.
+
 ## Working on git repositories
 
 - **Commits:** Commit only as the configured git user; never add co-author trailers. Never rewrite published history (`git push --force`, `git reset --hard`, amending pushed commits) unless I explicitly ask.
