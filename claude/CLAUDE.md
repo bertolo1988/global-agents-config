@@ -25,7 +25,7 @@ These rules apply to every agent, in every project.
   - GitHub: run `gh issue edit <n> --add-label "in-progress"` (if missing, run `gh label create "in-progress" --color FBCA04 --description "Being worked on"` first). Do not change assignees or project boards.
   - Jira: move the ticket to in-progress and assign it to yourself (via MCP, CLI, or asking me).
 - **Respect existing claims:** If an issue or ticket already has `in-progress` (or `status: in-progress` / `in progress`) or is assigned to someone else, stop and tell me; never take it over.
-- **Name the thread:** Once claimed, rename the session to the exact `#<number> - <title>` (Jira: `<KEY-123> - <title>`) without paraphrasing, if supported and not already named by a supervisor.
+- **Name the thread:** Once claimed, rename the session to the exact `<repo> #<number> - <title>` (Jira: `<repo> <KEY-123> - <title>`) without paraphrasing, if supported and not already named by a supervisor. `<repo>` is the repository name, not the worktree folder. When working on or reviewing a pull request with no claimed issue, use `<repo> PR #<number> - <title>`. If you cannot rename the session yourself, ask me to run `/rename` with that exact name.
 - **Release when done or handed off:** Keep the claim while open (opening a PR does not release it). Remove the `in-progress` label (`gh issue edit <n> --remove-label "in-progress"`) and say so in your reply only when:
   - Done: PR is merged and the ticket is complete (Jira: move to done).
   - Handed off: leaving the ticket for someone else (Jira: move back to start status).
@@ -40,6 +40,7 @@ These rules apply to every agent, in every project.
 - **Commits:** Commit only as the configured git user; never add co-author trailers. Never rewrite published history (`git push --force`, `git reset --hard`, amending pushed commits) unless I explicitly ask.
 - **Commit messages:** Follow the project's convention if one exists; otherwise use [Conventional Commits](https://www.conventionalcommits.org/) (`<type>(<optional scope>): <description>`, imperative mood, <=72 chars, no trailing period, body when non-obvious, `BREAKING CHANGE:` or `!` for breaking changes, `Refs: #123` footer). Never use vague subjects (`updates`, `fixes`, `wip`).
 - **GitHub actions:** Make every GitHub write (comments, replies, reviews, labels, issue and PR creation or edits, merges) through the `gh` CLI or the GitHub MCP server, never through a browser.
+- **Branch names:** Start the branch name with the issue or ticket it serves, so the window title (Codex `git-branch`) shows what the session is on: `<number>-<short-slug>` (e.g. `123-fix-login`; Jira: `KEY-123-fix-login`). Use a descriptive name only when there is no issue.
 - **Worktrees:** Unless told otherwise, never work in the main checkout. Use one worktree per branch at `~/code/tmp/<project>/<branch-name>`:
   `git fetch origin <default-branch> && git worktree add -b <branch-name> ../tmp/<project>/<branch-name> origin/<default-branch>`
   Run all commands inside the worktree. Before starting new work and once a PR merges, remove merged worktrees (`git worktree remove`), delete their local branches, and run `git worktree prune`.
