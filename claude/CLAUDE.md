@@ -21,14 +21,15 @@ These rules apply to every agent, in every project.
 
 ## Claiming issues and tickets
 
-- **Claim first:** Before planning or working on a GitHub issue or Jira ticket (skip for read-only questions), follow the project's claim procedure if documented; otherwise:
+- **Claim first:** Any work on a GitHub issue or Jira ticket claims it, and the claim is set at the START, before the first edit or plan step. "Work" covers everything, not only building: refining, rewriting or editing the ticket text, estimating, planning, reviewing, triaging, testing (running tests, QA, playtesting, verifying a ticket's work) and implementing. Only pure read-only questions are exempt. Your explicit request does not replace this check: flag an existing claim before editing, not after. Follow the project's claim procedure if documented; otherwise:
   - GitHub: run `gh issue edit <n> --add-label "in-progress"` (if missing, run `gh label create "in-progress" --color FBCA04 --description "Being worked on"` first). Do not change assignees or project boards.
   - Jira: move the ticket to in-progress and assign it to yourself (via MCP, CLI, or asking me).
 - **Respect existing claims:** If an issue or ticket already has `in-progress` (or `status: in-progress` / `in progress`) or is assigned to someone else, stop and tell me; never take it over.
 - **Name the thread:** Once claimed, rename the session to the exact `<repo> #<number> - <title>` (Jira: `<repo> <KEY-123> - <title>`) without paraphrasing, if supported and not already named by a supervisor. `<repo>` is the repository name, not the worktree folder. When working on or reviewing a pull request with no claimed issue, use `<repo> PR #<number> - <title>`. If you cannot rename the session yourself, ask me to run `/rename` with that exact name.
-- **Release when done or handed off:** Keep the claim while open (opening a PR does not release it). Remove the `in-progress` label (`gh issue edit <n> --remove-label "in-progress"`) and say so in your reply only when:
-  - Done: PR is merged and the ticket is complete (Jira: move to done).
-  - Handed off: leaving the ticket for someone else (Jira: move back to start status).
+- **Release when done or handed off:** A ticket is `in-progress` from the start of any work and is not `in-progress` once that work is done. Release it and say so in your reply when:
+  - Refining, rewriting, estimating, planning, reviewing, triaging or testing is delivered: remove the label (`gh issue edit <n> --remove-label "in-progress"`; Jira: move back to start status).
+  - Implementing: keep the claim while the PR is open (opening a PR does not release it); release when the PR is merged and the ticket is complete (Jira: move to done).
+  - Handed off, for any work: leaving the ticket for someone else (same removal; Jira: move back to start status).
 - **Dispatched agents:** If a supervisor or another session already claimed the item, skip claiming and releasing.
 
 ## Creating issues and tickets
