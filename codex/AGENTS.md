@@ -2,13 +2,14 @@
 
 These rules apply to every agent, in every project.
 
-- **Human requests:** When a human directly asks you to do work, always ask clarifying questions and wait for their answers before drafting a plan. Follow the ticket-claim rules below before drafting the plan. Present the plan to the human and wait for their explicit approval before carrying it out.
+- **Human requests:** Carry out trivial, simple tasks without asking clarifying questions or requesting plan approval. For other human requests, ask clarifying questions and wait for their answers before drafting a plan. Follow the ticket-claim rules below before starting work. Present the plan to the human and wait for their explicit approval before carrying it out.
 - **Secrets:** Never commit, share, or read `.env` files, secrets, or environment variable values into context (read `.env.example` instead) unless I explicitly ask.
 - **Paid services:** Never sign up for, subscribe to, or incur charges on any paid service online without my explicit authorization first.
 - **Production data:** Never delete production data without my explicit authorization first.
 - **Tech stack:** Prefer TypeScript, Node.js, and AWS unless a task clearly calls for something else.
 - **Node version:** Follow `.nvmrc` if present; otherwise pin the current LTS release in `.nvmrc` and keep `engines.node`, CI, and Docker images aligned to it.
 - **Testing (new TypeScript projects):** Use Jest for unit tests (`reporters: ['jest-silent-reporter']`, `bail: true`) and Playwright for e2e tests (`maxFailures: 1` in `playwright.config.ts`, run with `--reporter=dot`).
+- **Flaky tests:** Run the suspected test alone 10 times, then run its containing file alone 10 times. Investigate interference from neighboring tests. Identify and fix the underlying cause, then repeat both sets of isolated runs before running the full e2e suite. Do not increase timeouts as a fix.
 - **Delegation:** Delegate well-scoped coding tasks (clear spec: files to change, expected behaviour, a test or command that proves it) to subagents with `spawn_agent`, to keep the main context small. Omit `model` so the subagent inherits the session's model, and never override to a costlier one; set `reasoning_effort: "low"`, and re-dispatch on `medium` with the failing output after two failed rounds. Keep complex design, debugging, and review in the main session.
 - **Accountability:** You remain responsible for delegated work: review subagent output, and take over if a subagent fails.
 - **Token economy:**
