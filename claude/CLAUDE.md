@@ -2,7 +2,7 @@
 
 These rules apply to every agent, in every project.
 
-- **Human requests:** Carry out trivial, simple tasks without asking clarifying questions or requesting plan approval. For other human requests, ask clarifying questions and wait for their answers before drafting a plan. Follow the ticket-claim rules below before starting work. Present the plan to the human and wait for their explicit approval before carrying it out.
+- **Human requests:** Carry out trivial, simple tasks passed in a short message without asking clarifying questions, drafting a plan or requesting plan approval. For other human requests, ask clarifying questions and wait for their answers before drafting a plan. Follow the ticket-claim rules below before starting work. Present the plan to the human and wait for their explicit approval before carrying it out.
 - **Secrets:** Never commit, share, or read `.env` files, secrets, or environment variable values into context (read `.env.example` instead) unless I explicitly ask.
 - **Paid services:** Never sign up for, subscribe to, or incur charges on any paid service online without my explicit authorization first.
 - **Production data:** Never delete production data without my explicit authorization first.
